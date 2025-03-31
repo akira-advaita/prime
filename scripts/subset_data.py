@@ -57,7 +57,6 @@ def _download_file(data_file: str, save_path: str) -> None:
 
     cmd = [
         "wget",
-        f'--header="Authorization: Bearer {get_token()}"',
         f"https://huggingface.co/{data_file}?download=true",
         f"-O {save_path}",
     ]
@@ -73,7 +72,7 @@ def _download_file_wrapper(args):
 
 def _get_save_path(data_file: str) -> str:
     ret_list = data_file.split("@")[-1].split("/")[1:]
-    return args.dataset_name.split("/")[-1] + "/" + "/".join(ret_list)
+    return args.prefix + "/" + args.dataset_name.split("/")[-1] + "/" + "/".join(ret_list)
 
 
 def main(args):
@@ -110,6 +109,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download and process data from a HF dataset")
     parser.add_argument("--dataset_name", type=str, default="PrimeIntellect/fineweb-edu", help="dataset name")
+    parser.add_argument("--prefix", type=str, default="./", help="file path prefix for stored dataset")
     parser.add_argument("--dry_run", action="store_true", help="do not download data")
     parser.add_argument("--filter", type=str, default="", help="search shards by the filter")
     parser.add_argument("--data_rank", type=int, default=0, help="start index")
